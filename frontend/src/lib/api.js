@@ -14,7 +14,8 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (r) => r,
   (err) => {
-    if (err?.response?.status === 401) {
+    // Envios da gravação não redirecionam: sair da página interromperia a reunião.
+    if (err?.response?.status === 401 && !err?.config?.skipAuthRedirect) {
       localStorage.removeItem("ata_token");
       localStorage.removeItem("ata_user");
       if (!window.location.pathname.startsWith("/login") && !window.location.pathname.startsWith("/register")) {

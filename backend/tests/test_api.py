@@ -40,7 +40,7 @@ def fake_ai(monkeypatch):
         raise AssertionError(operation)
 
     monkeypatch.setattr(llm, "chat", fake_chat)
-    monkeypatch.setattr("app.api.meetings.transcribe", lambda audio, name, tenant_id=None: "fala transcrita")
+    monkeypatch.setattr("app.api.meetings.transcribe", lambda audio, name, **kw: "fala transcrita")
     return calls
 
 

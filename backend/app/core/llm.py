@@ -122,7 +122,20 @@ def chat_json(system: str, user: str, **kwargs) -> dict:
     return parse_json(chat(system, user, **kwargs))
 
 
-def transcribe(audio: bytes, filename: str, *, tenant_id: int | None = None) -> str:
+def transcription_prompt(previous_text: str = "") -> str:
+    """Vocabulário do setor + final do texto anterior (dá continuidade entre trechos).
+
+    O modelo considera só ~224 tokens de prompt, por isso o texto é limitado.
+    """
+    full = (previous_text or "").strip()
+    tail = full[-400:]
+    if len(full) > 400 and " " in tail:
+        tail = tail[tail.index(" ") + 1:]  # não começa no meio de uma palavra
+    return f"{settings.TRANSCRIPTION_PROMPT[:500]} {tail}".strip()
+
+
+def transcribe(audio: bytes, filename: str, *, tenant_id: int | None = None, prompt: str = "",
+               audio_seconds: float = 0) -> str:
     """Transcreve um trecho de áudio. Hoje usa a API de áudio da OpenAI."""
     if not settings.OPENAI_API_KEY:
         raise AIError("A transcrição exige OPENAI_API_KEY configurada.")
@@ -132,12 +145,13 @@ def transcribe(audio: bytes, filename: str, *, tenant_id: int | None = None) -> 
         client = OpenAI(api_key=settings.OPENAI_API_KEY)
         buf = io.BytesIO(audio)
         buf.name = filename or "audio.webm"
-        resp = client.audio.transcriptions.create(
-            model=settings.TRANSCRIPTION_MODEL,
-            file=buf,
-            language=settings.TRANSCRIPTION_LANGUAGE,
-        )
-        _log_usage(tenant_id, "transcription", "openai", settings.TRANSCRIPTION_MODEL)
+        kwargs = {"model": settings.TRANSCRIPTION_MODEL, "file": buf,
+                  "language": settings.TRANSCRIPTION_LANGUAGE}
+        if prompt:
+            kwargs["prompt"] = prompt
+        resp = client.audio.transcriptions.create(**kwargs)
+        _log_usage(tenant_id, "transcription", "openai", settings.TRANSCRIPTION_MODEL,
+                   audio_seconds=audio_seconds)
         return (getattr(resp, "text", "") or "").strip()
     except Exception as exc:
         logger.exception("Erro na transcrição")

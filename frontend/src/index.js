@@ -21,3 +21,10 @@ root.render(
     </QueryClientProvider>
   </React.StrictMode>,
 );
+
+// Aplicativo instalável (PWA). Só em produção, para não atrapalhar o recarregamento em desenvolvimento.
+if (process.env.NODE_ENV === "production" && "serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/service-worker.js").catch(() => {});
+  });
+}

@@ -44,11 +44,24 @@ yarn start                     # http://localhost:3000
 Com `ALLOW_SIGNUP=true` (padrão em desenvolvimento), use "Cadastrar meu RPPS" na tela de login para criar o primeiro
 RPPS e seu administrador. Depois, em **Base de Conhecimento**, envie a ata-modelo do RPPS em DOCX.
 
+Para gravar pelo celular, o navegador exige HTTPS (em `localhost` funciona sem). Para testar no celular durante o
+desenvolvimento, use um túnel HTTPS (ex.: `cloudflared tunnel --url http://localhost:8000` com o build servido pelo
+backend). O envio de gravações prontas usa o `ffmpeg`, que precisa estar instalado (a imagem Docker já inclui).
+
 Testes:
 
 ```bash
 cd backend && python -m pytest -q
 ```
+
+## Gravação
+
+- **Ao vivo:** a gravação segue durante toda a reunião, em trechos de 45 s transcritos à medida que chegam. Ao
+  mudar de item, use "Encerrar item e ir para o próximo": o item anterior é resumido assim que os trechos dele
+  forem transcritos. Os trechos ficam guardados no aparelho até o servidor confirmar, então uma queda de rede ou
+  o fechamento da aba não perdem áudio.
+- **Gravação pronta:** "Já tem a gravação? Enviar arquivo" aceita áudio ou vídeo de até `MAX_RECORDING_MB`
+  (padrão 500 MB) e `MAX_RECORDING_HOURS` (padrão 6 h). Para a reunião inteira, a IA reparte o texto pelos itens.
 
 ## Perfis de acesso
 

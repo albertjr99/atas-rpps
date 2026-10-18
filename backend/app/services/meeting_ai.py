@@ -35,7 +35,7 @@ def summarize_topic(topic: dict, *, tenant_id: int) -> dict:
 }}
 
 Transcrição:
-\"\"\"{transcription[:24000]}\"\"\"
+\"\"\"{transcription[:120000]}\"\"\"
 
 Responda APENAS com o JSON."""
     data = chat_json(_TOPIC_SYSTEM, prompt, tenant_id=tenant_id, operation="topic_summary")
@@ -114,3 +114,45 @@ Responda APENAS com o JSON."""
         "resumo_executivo": str(data.get("resumo_executivo", "")),
         "proxima_pauta_sugerida": str(data.get("proxima_pauta_sugerida", "")),
     }
+
+
+def locate_agenda_topics(sentences: list[str], agenda: list[dict], *, tenant_id: int) -> dict[str, int]:
+    """Indica em qual frase começa a discussão de cada item da pauta.
+
+    A IA devolve só índices; o texto é repartido no código, sem ser reescrito.
+    Itens não discutidos ficam de fora do resultado.
+    """
+    if not sentences or not agenda:
+        return {}
+    numbered = "\n".join(f"[{i}] {s[:160]}" for i, s in enumerate(sentences))
+    items = "\n".join(f"{i}. {t.get('title', '')}" + (f" — {t['description']}" if t.get("description") else "")
+                      for i, t in enumerate(agenda))
+    prompt = f"""Abaixo está a transcrição de uma reunião de RPPS dividida em frases numeradas, e a pauta.
+Identifique a frase em que COMEÇA a discussão de cada item da pauta. A abertura da reunião (saudação,
+verificação de quórum) não é um item: comece o primeiro item onde o assunto dele começa. Se um item não
+foi discutido, use null.
+
+Pauta:
+{items}
+
+Frases:
+{numbered[:400000]}
+
+Responda APENAS com JSON no formato {{"inicios": [{{"item": 0, "frase": 12}}, {{"item": 1, "frase": null}}]}}"""
+    data = chat_json(_TOPIC_SYSTEM, prompt, tenant_id=tenant_id, operation="agenda_split",
+                     temperature=0, max_tokens=1500)
+    starts: dict[str, int] = {}
+    for entry in data.get("inicios") or []:
+        try:
+            item, frase = int(entry.get("item")), entry.get("frase")
+        except (TypeError, ValueError, AttributeError):
+            continue
+        if frase is None or not 0 <= item < len(agenda):
+            continue
+        try:
+            frase = int(frase)
+        except (TypeError, ValueError):
+            continue
+        if 0 <= frase < len(sentences) and frase not in starts.values():
+            starts[agenda[item]["id"]] = frase
+    return starts

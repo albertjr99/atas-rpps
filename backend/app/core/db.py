@@ -139,6 +139,34 @@ CREATE TABLE IF NOT EXISTS agent_changes (
     created_at  TEXT NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS transcript_segments (
+    tenant_id   INTEGER NOT NULL REFERENCES tenants(id),
+    meeting_id  TEXT NOT NULL REFERENCES meetings(id) ON DELETE CASCADE,
+    id          TEXT NOT NULL,                     -- gerado pelo navegador (idempotência)
+    topic_id    TEXT NOT NULL,
+    seq         INTEGER NOT NULL DEFAULT 0,
+    duration_ms INTEGER NOT NULL DEFAULT 0,
+    text        TEXT NOT NULL DEFAULT '',
+    created_at  TEXT NOT NULL,
+    PRIMARY KEY (tenant_id, meeting_id, id)
+);
+
+CREATE TABLE IF NOT EXISTS jobs (
+    id          TEXT PRIMARY KEY,
+    tenant_id   INTEGER NOT NULL REFERENCES tenants(id),
+    meeting_id  TEXT NOT NULL REFERENCES meetings(id) ON DELETE CASCADE,
+    kind        TEXT NOT NULL,
+    status      TEXT NOT NULL DEFAULT 'queued',    -- queued|running|done|failed
+    step        TEXT NOT NULL DEFAULT '',
+    progress    INTEGER NOT NULL DEFAULT 0,
+    total       INTEGER NOT NULL DEFAULT 0,
+    error       TEXT NOT NULL DEFAULT '',
+    result_json TEXT NOT NULL DEFAULT '{}',
+    created_at  TEXT NOT NULL,
+    updated_at  TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_jobs_meeting ON jobs(tenant_id, meeting_id, created_at DESC);
+
 CREATE TABLE IF NOT EXISTS usage_log (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     tenant_id   INTEGER NOT NULL,
@@ -156,6 +184,10 @@ CREATE TABLE IF NOT EXISTS usage_log (
 def init_db() -> None:
     with get_db() as conn:
         conn.executescript(SCHEMA)
+        # Trabalhos em andamento não sobrevivem a um reinício do servidor.
+        conn.execute("UPDATE jobs SET status = 'failed', error = 'Processamento interrompido pelo reinício do "
+                     "servidor. Envie o arquivo novamente.', updated_at = ? WHERE status IN ('queued', 'running')",
+                     (now_iso(),))
 
 
 # ── Serialização ────────────────────────────────────────────────────────────

@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/auth";
 import {
@@ -8,6 +9,8 @@ import {
   WaveSawtooth,
   GearSix,
   Database,
+  List,
+  X,
 } from "@phosphor-icons/react";
 
 const navItems = [
@@ -36,14 +39,47 @@ export default function Layout({ children }) {
   const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
+  // A tela de condução tem cabeçalho próprio: no celular ocupa a tela inteira.
+  const immersive = location.pathname.endsWith("/conduct");
+
+  useEffect(() => setMenuOpen(false), [location.pathname]);
 
   return (
     <div className="min-h-screen flex bg-[#F0F2F5]">
+      {/* Barra superior (celular e tablet) */}
+      {!immersive && (
+        <div className="lg:hidden fixed top-0 inset-x-0 h-14 z-30 flex items-center justify-between px-4" style={{ background: "#0B1628" }}>
+          <button onClick={() => navigate("/")} className="flex items-center gap-2" aria-label="Início">
+            <div className="w-8 h-8 bg-[#0055FF] rounded-lg flex items-center justify-center">
+              <WaveSawtooth size={16} weight="bold" className="text-white" />
+            </div>
+            <span className="font-display font-black text-white">ATA<span className="text-[#0055FF]">.IA</span></span>
+          </button>
+          <button
+            onClick={() => setMenuOpen(true)}
+            className="w-10 h-10 rounded-lg flex items-center justify-center text-white/80 hover:bg-white/10"
+            aria-label="Abrir menu"
+            data-testid="mobile-menu-btn"
+          >
+            <List size={22} />
+          </button>
+        </div>
+      )}
+      {menuOpen && <div className="lg:hidden fixed inset-0 z-30 bg-black/50" onClick={() => setMenuOpen(false)} />}
+
       <aside
-        className="w-64 flex flex-col fixed top-0 left-0 h-screen z-20"
+        className={`w-64 flex-col fixed top-0 left-0 h-screen z-40 ${menuOpen ? "flex" : "hidden"} lg:flex lg:z-20`}
         style={{ background: "#0B1628" }}
         data-testid="sidebar-nav"
       >
+        <button
+          onClick={() => setMenuOpen(false)}
+          className="lg:hidden absolute top-4 right-3 w-9 h-9 rounded-lg flex items-center justify-center text-white/60 hover:bg-white/10"
+          aria-label="Fechar menu"
+        >
+          <X size={18} />
+        </button>
         {/* Logo */}
         <div className="px-5 py-5 border-b border-white/8">
           <button
@@ -132,7 +168,7 @@ export default function Layout({ children }) {
         </div>
       </aside>
 
-      <main className="flex-1 ml-64 overflow-auto min-h-screen">{children}</main>
+      <main className={`flex-1 lg:ml-64 overflow-auto min-h-screen min-w-0 ${immersive ? "" : "pt-14 lg:pt-0"}`}>{children}</main>
     </div>
   );
 }

@@ -65,7 +65,7 @@ export default function Deliberations() {
   }, {});
 
   return (
-    <div className="p-8 max-w-7xl mx-auto" data-testid="deliberations-page">
+    <div className="p-4 md:p-8 max-w-7xl mx-auto" data-testid="deliberations-page">
 
       {/* ── Header ── */}
       <div className="mb-8 fade-up">

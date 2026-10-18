@@ -11,6 +11,8 @@ FROM python:3.12-slim
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 APP_ENV=production \
     DATABASE_PATH=/data/atas.db UPLOAD_DIR=/data/uploads
 WORKDIR /app
+# ffmpeg divide gravações longas (Zoom/Meet/Teams) em partes para a transcrição
+RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg && rm -rf /var/lib/apt/lists/*
 COPY backend/requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 COPY backend/app ./app

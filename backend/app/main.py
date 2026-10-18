@@ -98,5 +98,10 @@ if _static.is_dir():
         target = (_static / full_path).resolve()
         # Impede path traversal (ex.: /../app/core/config.py)
         if target.is_file() and target.is_relative_to(_static):
-            return FileResponse(target)
-        return FileResponse(_static / "index.html")
+            if full_path.startswith("static/"):  # nomes com hash: podem ficar em cache para sempre
+                return FileResponse(target, headers={"Cache-Control": "public, max-age=31536000, immutable"})
+            if full_path == "service-worker.js":
+                return FileResponse(target, media_type="application/javascript",
+                                    headers={"Cache-Control": "no-cache", "Service-Worker-Allowed": "/"})
+            return FileResponse(target, headers={"Cache-Control": "no-cache"})
+        return FileResponse(_static / "index.html", headers={"Cache-Control": "no-cache"})

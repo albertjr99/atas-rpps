@@ -186,7 +186,7 @@ export default function Dashboard() {
         );
 
   return (
-    <div className="p-8 max-w-7xl mx-auto" data-testid="dashboard-page">
+    <div className="p-4 md:p-8 max-w-7xl mx-auto" data-testid="dashboard-page">
 
       {/* ── Header ── */}
       <header className="flex items-start justify-between mb-8 fade-up">

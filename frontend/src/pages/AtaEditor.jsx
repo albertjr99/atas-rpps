@@ -483,7 +483,7 @@ export default function AtaEditor() {
 
   if (!meeting) {
     return (
-      <div className="p-8 max-w-6xl mx-auto">
+      <div className="p-4 md:p-8 max-w-6xl mx-auto">
         <div className="h-8 w-32 shimmer rounded-lg mb-6" />
         <div className="h-12 w-96 shimmer rounded-xl mb-4" />
         <div className="h-96 shimmer rounded-2xl" />
@@ -492,7 +492,7 @@ export default function AtaEditor() {
   }
 
   return (
-    <div className="p-8 max-w-6xl mx-auto" data-testid="ata-editor-page">
+    <div className="p-4 md:p-8 max-w-6xl mx-auto" data-testid="ata-editor-page">
       <button
         onClick={() => navigate(`/meetings/${id}`)}
         className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-900 mb-6 transition-colors"

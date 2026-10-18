@@ -41,6 +41,8 @@ class Settings:
         self.UPLOAD_DIR = Path(os.getenv("UPLOAD_DIR", str(BACKEND_DIR / "data" / "uploads")))
         self.MAX_UPLOAD_MB = int(os.getenv("MAX_UPLOAD_MB", "20"))
         self.MAX_AUDIO_MB = int(os.getenv("MAX_AUDIO_MB", "25"))
+        self.MAX_RECORDING_MB = int(os.getenv("MAX_RECORDING_MB", "500"))
+        self.MAX_RECORDING_HOURS = float(os.getenv("MAX_RECORDING_HOURS", "6"))
 
         # Autenticação
         secret = os.getenv("SECRET_KEY", "")
@@ -70,6 +72,14 @@ class Settings:
         # Transcrição: hoje via OpenAI (exige OPENAI_API_KEY)
         self.TRANSCRIPTION_MODEL = os.getenv("TRANSCRIPTION_MODEL", "whisper-1")
         self.TRANSCRIPTION_LANGUAGE = os.getenv("TRANSCRIPTION_LANGUAGE", "pt")
+        # Vocabulário que ajuda o modelo de transcrição a acertar termos do setor.
+        self.TRANSCRIPTION_PROMPT = os.getenv(
+            "TRANSCRIPTION_PROMPT",
+            "Reunião do Comitê de Investimentos do RPPS. Termos: Regime Próprio de Previdência Social, "
+            "Resolução CMN nº 4.963, Política de Investimentos, meta atuarial, IPCA, Selic, CDI, Ibovespa, "
+            "IMA-B, IRF-M, IDkA, fundos de renda fixa, renda variável, Pró-Gestão, APR, credenciamento, "
+            "aplicação, resgate, carteira, enquadramento, deliberação.",
+        )
 
         # CORS: em produção o frontend é servido pelo próprio backend
         origins = os.getenv("CORS_ORIGINS", "" if self.is_production else "http://localhost:3000")

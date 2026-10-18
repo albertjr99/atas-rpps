@@ -185,7 +185,7 @@ export default function NewMeeting() {
   };
 
   return (
-    <div className="p-8 max-w-4xl mx-auto" data-testid="new-meeting-page">
+    <div className="p-4 md:p-8 max-w-4xl mx-auto" data-testid="new-meeting-page">
       <button
         onClick={() => navigate(-1)}
         className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-900 mb-6 transition-colors"

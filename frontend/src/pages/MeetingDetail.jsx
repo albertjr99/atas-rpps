@@ -74,7 +74,7 @@ export default function MeetingDetail() {
 
   if (!meeting) {
     return (
-      <div className="p-8 max-w-5xl mx-auto">
+      <div className="p-4 md:p-8 max-w-5xl mx-auto">
         <div className="h-8 w-32 shimmer rounded-lg mb-8" />
         <div className="h-12 w-96 shimmer rounded-xl mb-4" />
         <div className="grid md:grid-cols-3 gap-4">
@@ -89,7 +89,7 @@ export default function MeetingDetail() {
   const progress = meeting.agenda.length > 0 ? (completedTopics / meeting.agenda.length) * 100 : 0;
 
   return (
-    <div className="p-8 max-w-5xl mx-auto fade-in" data-testid="meeting-detail-page">
+    <div className="p-4 md:p-8 max-w-5xl mx-auto fade-in" data-testid="meeting-detail-page">
       <button
         onClick={() => navigate(-1)}
         className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-900 mb-6 transition-colors"

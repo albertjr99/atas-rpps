@@ -206,7 +206,7 @@ export default function KnowledgeBase() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] p-8 fade-up">
+    <div className="min-h-screen bg-[#F8FAFC] p-4 md:p-8 fade-up">
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-1">
           <div className="w-10 h-10 rounded-xl bg-[#0055FF]/10 flex items-center justify-center">

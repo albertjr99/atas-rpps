@@ -7,15 +7,24 @@
 - Ata-modelo DOCX usada como base da exportação.
 - Testes automatizados do fluxo completo (com IA simulada).
 
-## Etapa 1 — Gravação robusta
+## Etapa 1 — Gravação robusta ✅
 
-- Gravar em pedaços de 30 a 60 s (`MediaRecorder.start(timeslice)`) e enviar cada pedaço ao
-  `/topics/{id}/transcribe`, que já acrescenta a transcrição (backend pronto).
-- Cópia local dos pedaços no navegador (IndexedDB) até a confirmação do servidor.
-- Wake Lock API para manter a tela do celular acesa.
-- Service worker (PWA instalável).
-- Gravação contínua com botão "próximo item da pauta" marcando o tempo da troca.
-- Upload de gravação pronta (Zoom/Meet/Teams), dividida no servidor em trechos.
+- Gravação contínua em trechos independentes de 45 s (um `MediaRecorder` novo por trecho sobre o mesmo
+  microfone; com `timeslice` só o primeiro pedaço teria cabeçalho e a transcrição rejeitaria os demais).
+- Cada trecho é salvo no aparelho (IndexedDB) antes do envio e só é apagado após a confirmação do servidor.
+  Fila em ordem, com nova tentativa automática (rede caída, falha do provedor) e retomada ao reabrir a página.
+- Id por trecho: reenviar o mesmo trecho não transcreve nem duplica o texto (`transcript_segments`).
+- Trechos praticamente mudos não são enviados; frases típicas de "alucinação" no silêncio são removidas no servidor.
+- Vocabulário do setor e final do trecho anterior enviados como contexto à transcrição.
+- Botão "Encerrar item e ir para o próximo" sem parar a gravação; o resumo do item espera os trechos dele chegarem.
+- Tela acesa durante a gravação (Wake Lock), aviso antes de fechar a aba, mensagens claras de microfone/HTTPS.
+- Upload de gravação pronta (Zoom/Meet/Teams, gravador): ffmpeg divide em partes de 10 min, transcrição em
+  segundo plano com progresso e, para a reunião inteira, a IA indica onde começa cada item (só índices; o texto
+  não é reescrito). O arquivo é apagado do servidor após o processamento.
+- PWA instalável (manifest, ícones, service worker que nunca guarda respostas da API) e layout para celular.
+
+Pendente para depois: transcrição em tempo real (streaming) e gravação com a tela do celular bloqueada no iOS
+(o Safari pausa o microfone em segundo plano; no Android/Chrome funciona com a tela acesa).
 
 ## Etapa 2 — Fidelidade total ao modelo DOCX
 

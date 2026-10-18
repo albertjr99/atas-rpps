@@ -1,9 +1,18 @@
 {
   "short_name": "Atas RPPS",
   "name": "Atas RPPS — atas de comitês com IA",
+  "description": "Grave a reunião, transcreva e gere a ata no padrão do RPPS.",
+  "id": "/",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "any",
   "theme_color": "#0B1628",
   "background_color": "#0B1628",
-  "lang": "pt-BR"
+  "lang": "pt-BR",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
 }
