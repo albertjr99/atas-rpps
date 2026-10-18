@@ -1,0 +1,302 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@500;600;700&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@500,700,800,900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    margin: 0;
+    font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #F0F2F5;
+    color: #0A0A0A;
+}
+
+.font-display {
+    font-family: 'Cabinet Grotesk', 'Space Grotesk', system-ui, sans-serif;
+    letter-spacing: -0.02em;
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+
+@layer base {
+    :root {
+        --background: 220 14% 96%;
+        --foreground: 0 0% 4%;
+        --card: 0 0% 100%;
+        --card-foreground: 0 0% 4%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 0 0% 4%;
+        --primary: 222 100% 50%;
+        --primary-foreground: 0 0% 100%;
+        --secondary: 210 17% 96%;
+        --secondary-foreground: 222 47% 11%;
+        --muted: 210 17% 96%;
+        --muted-foreground: 215 16% 47%;
+        --accent: 210 17% 96%;
+        --accent-foreground: 222 47% 11%;
+        --destructive: 4 100% 60%;
+        --destructive-foreground: 0 0% 100%;
+        --border: 214 24% 91%;
+        --input: 214 24% 91%;
+        --ring: 222 100% 50%;
+        --chart-1: 222 100% 50%;
+        --chart-2: 145 100% 39%;
+        --chart-3: 38 100% 50%;
+        --chart-4: 4 100% 60%;
+        --chart-5: 270 70% 55%;
+        --radius: 0.5rem;
+    }
+}
+
+@layer base {
+    * { @apply border-border; }
+    body { @apply bg-background text-foreground; }
+}
+
+@layer base {
+    [data-debug-wrapper="true"] { display: contents !important; }
+    [data-debug-wrapper="true"] > * {
+        margin-left: inherit; margin-right: inherit;
+        margin-top: inherit; margin-bottom: inherit;
+        padding-left: inherit; padding-right: inherit;
+        padding-top: inherit; padding-bottom: inherit;
+        column-gap: inherit; row-gap: inherit; gap: inherit;
+    }
+}
+
+/* ─── Glass ─── */
+.glass {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+}
+
+.glass-dark {
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+}
+
+/* ─── Recording pulse ─── */
+.recording-pulse {
+    box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.7);
+    animation: rec-pulse 1.6s infinite;
+}
+
+@keyframes rec-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.7); }
+    70% { box-shadow: 0 0 0 18px rgba(255, 59, 48, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0); }
+}
+
+/* ─── Blue glow pulse ─── */
+.blue-glow-pulse {
+    animation: blue-glow 2.4s ease-in-out infinite;
+}
+
+@keyframes blue-glow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(0, 85, 255, 0.3); }
+    50% { box-shadow: 0 0 0 12px rgba(0, 85, 255, 0); }
+}
+
+/* ─── Tracing beam ─── */
+.tracing-beam { position: relative; }
+.tracing-beam::before {
+    content: '';
+    position: absolute;
+    left: -3px; top: 0; bottom: 0; width: 3px;
+    background: linear-gradient(180deg, #0055FF 0%, #FF3B30 100%);
+    border-radius: 3px;
+    animation: beam-grow 2s ease-in-out infinite;
+}
+
+@keyframes beam-grow {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+}
+
+/* ─── Fade animations ─── */
+.fade-up {
+    animation: fade-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.fade-up-delay-1 { animation: fade-up 0.5s 0.05s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.fade-up-delay-2 { animation: fade-up 0.5s 0.10s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.fade-up-delay-3 { animation: fade-up 0.5s 0.15s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.fade-up-delay-4 { animation: fade-up 0.5s 0.20s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.fade-up-delay-5 { animation: fade-up 0.5s 0.25s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+@keyframes fade-up {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+    animation: fade-in 0.4s ease-out both;
+}
+@keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* ─── Slide in ─── */
+.slide-in-left {
+    animation: slide-in-left 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes slide-in-left {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* ─── Scale in ─── */
+.scale-in {
+    animation: scale-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+@keyframes scale-in {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* ─── Wave bars ─── */
+.wave-bar {
+    display: inline-block;
+    width: 3px;
+    margin: 0 2px;
+    background: #FF3B30;
+    border-radius: 2px;
+    animation: wave 1s ease-in-out infinite;
+}
+.wave-bar:nth-child(2) { animation-delay: 0.1s; }
+.wave-bar:nth-child(3) { animation-delay: 0.2s; }
+.wave-bar:nth-child(4) { animation-delay: 0.3s; }
+.wave-bar:nth-child(5) { animation-delay: 0.4s; }
+.wave-bar:nth-child(6) { animation-delay: 0.5s; }
+.wave-bar:nth-child(7) { animation-delay: 0.35s; }
+
+@keyframes wave {
+    0%, 100% { height: 6px; }
+    50% { height: 28px; }
+}
+
+/* ─── Shimmer (skeleton) ─── */
+.shimmer {
+    background: linear-gradient(90deg, #F1F5F9 25%, #E2E8F0 50%, #F1F5F9 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* ─── Float ─── */
+.float {
+    animation: float 6s ease-in-out infinite;
+}
+.float-delay {
+    animation: float 6s 2s ease-in-out infinite;
+}
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+}
+
+/* ─── Dot grid pattern ─── */
+.dot-grid {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+    background-size: 24px 24px;
+}
+
+/* ─── Label eyebrow ─── */
+.label-eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 10px;
+    font-weight: 700;
+    color: #64748B;
+}
+
+/* ─── Nav active indicator ─── */
+.nav-active-pill {
+    position: relative;
+}
+.nav-active-pill::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 50%;
+    transform: translateY(-50%);
+    width: 3px; height: 60%;
+    background: #0055FF;
+    border-radius: 0 3px 3px 0;
+}
+
+/* ─── Card hover lift ─── */
+.card-lift {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+}
+
+/* ─── Gradient text ─── */
+.gradient-text {
+    background: linear-gradient(135deg, #0055FF 0%, #5B8BFF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ─── Status ring ─── */
+.status-ring-recording {
+    position: relative;
+}
+.status-ring-recording::after {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 59, 48, 0.4);
+    animation: ring-expand 1.6s ease-out infinite;
+}
+
+@keyframes ring-expand {
+    0% { inset: -4px; opacity: 1; }
+    100% { inset: -20px; opacity: 0; }
+}
+
+/* ─── Progress bar ─── */
+.progress-bar {
+    height: 3px;
+    background: linear-gradient(90deg, #0055FF, #5B8BFF);
+    border-radius: 2px;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ─── Glow badge ─── */
+.glow-blue {
+    box-shadow: 0 0 12px rgba(0, 85, 255, 0.25);
+}
+
+/* ─── Selection ─── */
+::selection {
+    background: #0055FF;
+    color: #fff;
+}
+
+/* ─── Tick animation for step complete ─── */
+@keyframes tick-draw {
+    from { stroke-dashoffset: 40; }
+    to { stroke-dashoffset: 0; }
+}
+.tick-animate {
+    stroke-dasharray: 40;
+    stroke-dashoffset: 40;
+    animation: tick-draw 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}

@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: atas-rpps
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    disk:
+      name: dados
+      mountPath: /data      # banco SQLite e arquivos enviados persistem aqui
+      sizeGB: 1
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ADMIN_EMAIL
+        sync: false         # preencher no painel
+      - key: ADMIN_PASSWORD
+        sync: false         # mínimo 12 caracteres
+      - key: OPENAI_API_KEY
+        sync: false         # necessária para transcrição
+      - key: ANTHROPIC_API_KEY
+        sync: false         # opcional (geração de texto)
+      - key: AI_PROVIDER
+        value: auto
+      - key: ALLOW_SIGNUP
+        value: "false"

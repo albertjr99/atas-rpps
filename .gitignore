@@ -1,0 +1,29 @@
+# Segredos
+.env
+*.env
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Dados locais (banco, uploads, áudios)
+backend/data/
+backend/static/
+*.db
+*.db-wal
+*.db-shm
+
+# Frontend
+frontend/node_modules/
+frontend/build/
+
+# Sistema
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+.claude/
